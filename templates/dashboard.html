@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Карточки метрик -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+            <p class="text-xs text-slate-400 uppercase font-semibold">Добыто всего</p>
+            <p class="text-3xl font-extrabold text-emerald-400 mt-2">{{ stats.total_harvested }} <span class="text-sm font-normal text-slate-400">/ {{ stats.total_limit }} ос.</span></p>
+            <div class="w-full bg-slate-700 h-2 rounded-full mt-3 overflow-hidden">
+                <div class="bg-emerald-500 h-full" style="width: {{ stats.progress_percent }}%"></div>
+            </div>
+        </div>
+
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+            <p class="text-xs text-slate-400 uppercase font-semibold">Активных разрешений</p>
+            <p class="text-3xl font-extrabold text-white mt-2">{{ stats.active_permissions }}</p>
+            <p class="text-xs text-emerald-400 mt-2"><i class="fa-solid fa-check"></i> Реестр синхронизирован</p>
+        </div>
+
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700">
+            <p class="text-xs text-slate-400 uppercase font-semibold">Освоение квоты</p>
+            <p class="text-3xl font-extrabold text-white mt-2">{{ stats.progress_percent }}%</p>
+            <p class="text-xs text-slate-400 mt-2">В рамках нормы сезона</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

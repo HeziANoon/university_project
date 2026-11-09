@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <h2 class="text-2xl font-bold text-white">Реестр разрешений</h2>
+            <p class="text-sm text-slate-400">Управление выданными лицензиями на добычу</p>
+        </div>
+        <button onclick="document.getElementById('issueModal').classList.remove('hidden')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-4 py-2 rounded-lg text-sm transition flex items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-plus"></i> Выдать разрешение
+        </button>
+    </div>
+
+    <!-- Таблица разрешений -->
+    <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-lg">
+        <table class="w-full text-left text-sm text-slate-300">
+            <thead class="bg-slate-900/50 text-slate-400 uppercase text-xs border-b border-slate-700">
+                <tr>
+                    <th class="px-6 py-3">№ Разрешения</th>
+                    <th class="px-6 py-3">ФИО Охотника</th>
+                    <th class="px-6 py-3">Дата выдачи</th>
+                    <th class="px-6 py-3">Вид дичи</th>
+                    <th class="px-6 py-3">Статус</th>
+                    <th class="px-6 py-3 text-right">Действие</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700">
+                {% for perm in permissions %}
+                <tr class="hover:bg-slate-750 transition">
+                    <td class="px-6 py-4 font-mono text-emerald-400 font-semibold">{{ perm.number }}</td>
+                    <td class="px-6 py-4 font-medium text-white">{{ perm.fio }}</td>
+                    <td class="px-6 py-4">{{ perm.date }}</td>
+                    <td class="px-6 py-4">{{ perm.animal }}</td>
+                    <td class="px-6 py-4">
+                        {% if perm.status == 'Активно' %}
+                        <span class="px-2.5 py-1 bg-emerald-950 text-emerald-400 border border-emerald-800 rounded-full text-xs font-semibold">Активно</span>
+                        {% else %}
+                        <span class="px-2.5 py-1 bg-slate-700 text-slate-400 rounded-full text-xs font-semibold">Завершено</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        {% if perm.status == 'Активно' %}
+                        <button onclick="revokePermission('{{ perm.number }}')" class="text-rose-400 hover:text-rose-300 text-xs font-semibold cursor-pointer">Аннулировать</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Модальное окно создания -->
+<div id="issueModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div class="bg-slate-800 border border-slate-700 p-6 rounded-xl w-full max-w-md shadow-2xl relative">
+        <h3 class="text-lg font-bold text-white mb-4">Выдача нового разрешения</h3>
+        
+        <!-- Форма отправки (POST /permissions/issue) -->
+        <form action="/permissions/issue" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">ФИО Охотника</label>
+                <input type="text" name="hunter_fio" required placeholder="Иванов Иван Иванович" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Вид дичи</label>
+                <select name="animal_type" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500">
+                    <option value="Косуля">Косуля</option>
+                    <option value="Кабан">Кабан</option>
+                    <option value="Лось">Лось</option>
+                    <option value="Заяц">Заяц</option>
+                </select>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-4">
+                <button type="button" onclick="document.getElementById('issueModal').classList.add('hidden')" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-semibold text-slate-300 cursor-pointer">Отмена</button>
+                <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-xs font-semibold text-white cursor-pointer">Сохранить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+async function revokePermission(number) {
+    if (!confirm(`Аннулировать разрешение ${number}?`)) return;
+    
+    const res = await fetch(`/api/permissions/${number}/revoke`, { method: 'POST' });
+    if (res.ok) {
+        window.location.reload();
+    } else {
+        alert('Ошибка при аннулировании разрешения');
+    }
+}
+</script>
+{% endblock %}

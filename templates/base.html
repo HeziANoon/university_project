@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АИС «ОхотУчёт»</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+    <!-- Шапка -->
+    <header class="bg-slate-800 border-b border-slate-700 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <i class="fa-solid fa-tree text-emerald-400 text-2xl"></i>
+            <h1 class="text-xl font-bold text-white tracking-wide">ОхотУчёт <span class="text-xs text-emerald-400 font-normal px-2 py-0.5 bg-emerald-950 border border-emerald-800 rounded">MVP v1.0</span></h1>
+        </div>
+        <nav class="flex space-x-6 text-sm font-medium">
+            <a href="/" class="hover:text-emerald-400 transition">Дашборд</a>
+            <a href="/permissions" class="hover:text-emerald-400 transition">Разрешения</a>
+            <a href="/map" class="hover:text-emerald-400 transition">Карта</a>
+            <a href="/hunters" class="hover:text-emerald-400 transition">Охотники</a>
+            <a href="/reports" class="hover:text-emerald-400 transition">Отчеты</a>
+        </nav>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="flex-grow p-6 max-w-7xl mx-auto w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Подвал -->
+    <footer class="bg-slate-800 border-t border-slate-700 py-4 text-center text-xs text-slate-400">
+        АИС «ОхотУчёт» &copy; 2026. Державинский университет.
+    </footer>
+</body>
+</html>
